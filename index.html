@@ -1,25 +1,179 @@
-<div class="filter-bar">
-  <select id="language">
-    <option>Auto (Detect Region)</option>
-    <option>English</option>
-    <option>Spanish</option>
-    <option>Hindi</option>
-  </select>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accessibility Filter Bar</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease;
+    background-color: #f5f5f5;
+    color: #222;
+  }
 
-  <button onclick="changeFontSize('smaller')">A–</button>
-  <button onclick="changeFontSize('larger')">A+</button>
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    background: #20232a;
+    color: white;
+    padding: 10px;
+    gap: 10px;
+  }
 
-  <select id="theme" onchange="changeTheme(this.value)">
-    <option>Light</option>
-    <option>Dark</option>
-    <option>High Contrast</option>
-  </select>
+  .filter-bar select,
+  .filter-bar button,
+  .filter-bar input {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+  }
 
-  <select id="layout" onchange="changeLayout(this.value)">
-    <option>Simple</option>
-    <option>Detailed</option>
-  </select>
+  select, input {
+    cursor: pointer;
+  }
 
-  <input type="range" id="fps" min="1" max="3" value="2">
-  <label for="fps">Performance / Quality</label>
-</div>
+  /* Themes */
+  .light { background-color: #f5f5f5; color: #222; }
+  .dark { background-color: #181818; color: #f5f5f5; }
+  .contrast { background-color: black; color: yellow; }
+
+  /* Layout styles */
+  .simple .content p { font-size: 16px; line-height: 1.4; }
+  .detailed .content p { font-size: 18px; line-height: 1.8; }
+
+  /* Demo content */
+  .content {
+    padding: 30px;
+    max-width: 700px;
+    margin: auto;
+  }
+
+  .device-view {
+    border: 2px dashed gray;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+  }
+</style>
+</head>
+<body class="light simple">
+
+  <div class="filter-bar">
+    <!-- Language / Region -->
+    <select id="language" onchange="changeLanguage()">
+      <option value="auto">Auto (Detect Region)</option>
+      <option value="en">English</option>
+      <option value="es">Spanish</option>
+      <option value="hi">Hindi</option>
+    </select>
+
+    <!-- Font Size -->
+    <button onclick="adjustFontSize(-2)">A–</button>
+    <button onclick="adjustFontSize(2)">A+</button>
+
+    <!-- Color Theme -->
+    <select id="theme" onchange="changeTheme(this.value)">
+      <option value="light">☀️ Light</option>
+      <option value="dark">🌙 Dark</option>
+      <option value="contrast">⚡ High Contrast</option>
+    </select>
+
+    <!-- Layout -->
+    <select id="layout" onchange="changeLayout(this.value)">
+      <option value="simple">Simple UI</option>
+      <option value="detailed">Detailed UI</option>
+    </select>
+
+    <!-- Device Mode -->
+    <select id="device" onchange="changeDeviceView(this.value)">
+      <option value="desktop">💻 Desktop</option>
+      <option value="tablet">📱 Tablet</option>
+      <option value="mobile">📞 Mobile</option>
+    </select>
+
+    <!-- Performance -->
+    <input type="range" id="fps" min="1" max="3" value="2" onchange="changePerformance(this.value)">
+    <label for="fps" style="color:white;">Performance / Quality</label>
+  </div>
+
+  <div class="content">
+    <h1 id="heading">Welcome to Unreal Engine Accessibility Demo</h1>
+    <p id="paragraph">
+      This is a prototype showing how users can personalize Unreal Engine’s interface.
+      You can adjust language, layout, theme, and performance to match your preferences.
+    </p>
+
+    <div class="device-view" id="device-view">Desktop View Simulation</div>
+  </div>
+
+<script>
+  // Font size adjustment
+  function adjustFontSize(change) {
+    const content = document.querySelector('.content');
+    let current = parseFloat(window.getComputedStyle(content).fontSize);
+    content.style.fontSize = (current + change) + 'px';
+  }
+
+  // Theme change
+  function changeTheme(theme) {
+    document.body.className = theme + ' ' + getLayout();
+  }
+
+  // Layout change
+  function changeLayout(layout) {
+    const theme = getTheme();
+    document.body.className = theme + ' ' + layout;
+  }
+
+  // Device simulation
+  function changeDeviceView(device) {
+    const deviceBox = document.getElementById('device-view');
+    if (device === 'mobile') deviceBox.textContent = '📞 Mobile View Simulation';
+    else if (device === 'tablet') deviceBox.textContent = '📱 Tablet View Simulation';
+    else deviceBox.textContent = '💻 Desktop View Simulation';
+  }
+
+  // Performance change (simulate FPS effect)
+  function changePerformance(value) {
+    const body = document.body;
+    if (value == 1) body.style.transition = "all 0.8s ease";  // lower quality (laggier)
+    else if (value == 3) body.style.transition = "all 0.1s ease"; // high performance
+    else body.style.transition = "all 0.3s ease";
+  }
+
+  // Language change simulation
+  function changeLanguage() {
+    const lang = document.getElementById('language').value;
+    const heading = document.getElementById('heading');
+    const paragraph = document.getElementById('paragraph');
+
+    if (lang === 'es') {
+      heading.textContent = "Bienvenido a la demostración de accesibilidad de Unreal Engine";
+      paragraph.textContent = "Este es un prototipo que muestra cómo los usuarios pueden personalizar la interfaz de Unreal Engine.";
+    } else if (lang === 'hi') {
+      heading.textContent = "Unreal Engine एक्सेसिबिलिटी डेमो में आपका स्वागत है";
+      paragraph.textContent = "यह एक प्रोटोटाइप है जो दिखाता है कि उपयोगकर्ता Unreal Engine का इंटरफेस अपनी पसंद के अनुसार बदल सकते हैं।";
+    } else {
+      heading.textContent = "Welcome to Unreal Engine Accessibility Demo";
+      paragraph.textContent = "This is a prototype showing how users can personalize Unreal Engine’s interface.";
+    }
+  }
+
+  function getTheme() {
+    return document.body.classList.contains('dark') ? 'dark' :
+           document.body.classList.contains('contrast') ? 'contrast' : 'light';
+  }
+
+  function getLayout() {
+    return document.body.classList.contains('detailed') ? 'detailed' : 'simple';
+  }
+</script>
+
+</body>
+</html>
