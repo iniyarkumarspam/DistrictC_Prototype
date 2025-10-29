@@ -1,0 +1,25 @@
+<div class="filter-bar">
+  <select id="language">
+    <option>Auto (Detect Region)</option>
+    <option>English</option>
+    <option>Spanish</option>
+    <option>Hindi</option>
+  </select>
+
+  <button onclick="changeFontSize('smaller')">A–</button>
+  <button onclick="changeFontSize('larger')">A+</button>
+
+  <select id="theme" onchange="changeTheme(this.value)">
+    <option>Light</option>
+    <option>Dark</option>
+    <option>High Contrast</option>
+  </select>
+
+  <select id="layout" onchange="changeLayout(this.value)">
+    <option>Simple</option>
+    <option>Detailed</option>
+  </select>
+
+  <input type="range" id="fps" min="1" max="3" value="2">
+  <label for="fps">Performance / Quality</label>
+</div>
