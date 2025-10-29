@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Accessibility Filter Bar</title>
+<title>Accessibility Filter Bar Prototype</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -14,6 +14,7 @@
     color: #222;
   }
 
+  /* Filter Bar */
   .filter-bar {
     display: flex;
     flex-wrap: wrap;
@@ -43,15 +44,30 @@
   .dark { background-color: #181818; color: #f5f5f5; }
   .contrast { background-color: black; color: yellow; }
 
-  /* Layout styles */
-  .simple .content p { font-size: 16px; line-height: 1.4; }
-  .detailed .content p { font-size: 18px; line-height: 1.8; }
+  /* Layouts */
+  .simple .content {
+    background-color: #ffffff;
+    color: #222;
+  }
 
-  /* Demo content */
+  .detailed .content {
+    background-color: #000;
+    color: #f5f5f5;
+  }
+
+  .detailed .content p span:nth-child(1) { color: #ff6b6b; }
+  .detailed .content p span:nth-child(2) { color: #feca57; }
+  .detailed .content p span:nth-child(3) { color: #1dd1a1; }
+  .detailed .content p span:nth-child(4) { color: #54a0ff; }
+  .detailed .content p span:nth-child(5) { color: #5f27cd; }
+
+  /* Content */
   .content {
     padding: 30px;
     max-width: 700px;
     margin: auto;
+    border-radius: 10px;
+    transition: background 0.3s ease;
   }
 
   .device-view {
@@ -71,6 +87,8 @@
       <option value="en">English</option>
       <option value="es">Spanish</option>
       <option value="hi">Hindi</option>
+      <option value="fr">French</option>
+      <option value="zh">Chinese</option>
     </select>
 
     <!-- Font Size -->
@@ -79,9 +97,9 @@
 
     <!-- Color Theme -->
     <select id="theme" onchange="changeTheme(this.value)">
-      <option value="light">☀️ Light</option>
-      <option value="dark">🌙 Dark</option>
-      <option value="contrast">⚡ High Contrast</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+      <option value="contrast">High Contrast</option>
     </select>
 
     <!-- Layout -->
@@ -92,9 +110,9 @@
 
     <!-- Device Mode -->
     <select id="device" onchange="changeDeviceView(this.value)">
-      <option value="desktop">💻 Desktop</option>
-      <option value="tablet">📱 Tablet</option>
-      <option value="mobile">📞 Mobile</option>
+      <option value="desktop">Desktop</option>
+      <option value="tablet">Tablet</option>
+      <option value="mobile">Mobile</option>
     </select>
 
     <!-- Performance -->
@@ -105,8 +123,11 @@
   <div class="content">
     <h1 id="heading">Welcome to Unreal Engine Accessibility Demo</h1>
     <p id="paragraph">
-      This is a prototype showing how users can personalize Unreal Engine’s interface.
-      You can adjust language, layout, theme, and performance to match your preferences.
+      <span>This prototype allows users to customize Unreal Engine’s web experience.</span><br>
+      <span>Change the theme, language, or layout to your preference.</span><br>
+      <span>Switch between simple and detailed UI modes.</span><br>
+      <span>Adjust performance for smoother operation on any device.</span><br>
+      <span>Accessibility is for everyone, everywhere.</span>
     </p>
 
     <div class="device-view" id="device-view">Desktop View Simulation</div>
@@ -134,15 +155,15 @@
   // Device simulation
   function changeDeviceView(device) {
     const deviceBox = document.getElementById('device-view');
-    if (device === 'mobile') deviceBox.textContent = '📞 Mobile View Simulation';
-    else if (device === 'tablet') deviceBox.textContent = '📱 Tablet View Simulation';
-    else deviceBox.textContent = '💻 Desktop View Simulation';
+    if (device === 'mobile') deviceBox.textContent = 'Mobile View Simulation';
+    else if (device === 'tablet') deviceBox.textContent = 'Tablet View Simulation';
+    else deviceBox.textContent = 'Desktop View Simulation';
   }
 
   // Performance change (simulate FPS effect)
   function changePerformance(value) {
     const body = document.body;
-    if (value == 1) body.style.transition = "all 0.8s ease";  // lower quality (laggier)
+    if (value == 1) body.style.transition = "all 0.8s ease";  // lower quality (slower)
     else if (value == 3) body.style.transition = "all 0.1s ease"; // high performance
     else body.style.transition = "all 0.3s ease";
   }
@@ -155,13 +176,44 @@
 
     if (lang === 'es') {
       heading.textContent = "Bienvenido a la demostración de accesibilidad de Unreal Engine";
-      paragraph.textContent = "Este es un prototipo que muestra cómo los usuarios pueden personalizar la interfaz de Unreal Engine.";
+      paragraph.innerHTML = `
+        <span>Este prototipo permite a los usuarios personalizar la experiencia web de Unreal Engine.</span><br>
+        <span>Cambia el tema, idioma o diseño según tu preferencia.</span><br>
+        <span>Alterna entre modos de interfaz simple y detallado.</span><br>
+        <span>Ajusta el rendimiento para un funcionamiento más fluido.</span><br>
+        <span>La accesibilidad es para todos, en todas partes.</span>`;
     } else if (lang === 'hi') {
       heading.textContent = "Unreal Engine एक्सेसिबिलिटी डेमो में आपका स्वागत है";
-      paragraph.textContent = "यह एक प्रोटोटाइप है जो दिखाता है कि उपयोगकर्ता Unreal Engine का इंटरफेस अपनी पसंद के अनुसार बदल सकते हैं।";
+      paragraph.innerHTML = `
+        <span>यह प्रोटोटाइप उपयोगकर्ताओं को Unreal Engine का वेब अनुभव बदलने की अनुमति देता है।</span><br>
+        <span>थीम, भाषा या लेआउट अपनी पसंद के अनुसार बदलें।</span><br>
+        <span>सरल और विस्तृत यूआई मोड के बीच स्विच करें।</span><br>
+        <span>बेहतर प्रदर्शन के लिए गुणवत्ता समायोजित करें।</span><br>
+        <span>सुलभता सभी के लिए है।</span>`;
+    } else if (lang === 'fr') {
+      heading.textContent = "Bienvenue dans la démo d'accessibilité Unreal Engine";
+      paragraph.innerHTML = `
+        <span>Ce prototype permet aux utilisateurs de personnaliser leur expérience web Unreal Engine.</span><br>
+        <span>Modifiez le thème, la langue ou la mise en page selon vos préférences.</span><br>
+        <span>Passez entre les modes d’interface simple et détaillé.</span><br>
+        <span>Ajustez la performance pour un fonctionnement plus fluide.</span><br>
+        <span>L'accessibilité est pour tout le monde.</span>`;
+    } else if (lang === 'zh') {
+      heading.textContent = "欢迎使用虚幻引擎无障碍演示";
+      paragraph.innerHTML = `
+        <span>此原型允许用户自定义虚幻引擎的网页体验。</span><br>
+        <span>根据您的喜好更改主题、语言或布局。</span><br>
+        <span>在简单和详细界面模式之间切换。</span><br>
+        <span>调整性能以获得更流畅的体验。</span><br>
+        <span>无障碍访问属于每个人。</span>`;
     } else {
       heading.textContent = "Welcome to Unreal Engine Accessibility Demo";
-      paragraph.textContent = "This is a prototype showing how users can personalize Unreal Engine’s interface.";
+      paragraph.innerHTML = `
+        <span>This prototype allows users to customize Unreal Engine’s web experience.</span><br>
+        <span>Change the theme, language, or layout to your preference.</span><br>
+        <span>Switch between simple and detailed UI modes.</span><br>
+        <span>Adjust performance for smoother operation on any device.</span><br>
+        <span>Accessibility is for everyone, everywhere.</span>`;
     }
   }
 
