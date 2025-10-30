@@ -9,9 +9,7 @@
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    transition: all 0.3s ease;
-    background-color: #f5f5f5;
-    color: #222;
+    background-color: #e8e8e8;
   }
 
   /* Filter Bar */
@@ -33,94 +31,71 @@
     border: none;
     border-radius: 6px;
     font-size: 14px;
-  }
-
-  select, input {
     cursor: pointer;
   }
 
-  /* Themes */
-  .light { background-color: #f5f5f5; color: #222; }
-  .dark { background-color: #181818; color: #f5f5f5; }
-  .contrast { background-color: #000; color: #00ff00; }
+  .simulation {
+    margin: 30px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-  /* Layouts */
-  .simple .content {
-    background: none;
+  /* Default theme and layout */
+  .light { background-color: #ffffff; color: #222; }
+  .dark { background-color: #181818; color: #f5f5f5; }
+
+  .simple p {
+    font-size: 16px;
+    line-height: 1.4;
     color: inherit;
   }
 
-  .detailed .content {
-    background: #000;
-    color: #f5f5f5;
+  .detailed {
+    background-color: #000;
   }
 
-  .detailed .content p span:nth-child(1) { color: #ff6b6b; }
-  .detailed .content p span:nth-child(2) { color: #feca57; }
-  .detailed .content p span:nth-child(3) { color: #1dd1a1; }
-  .detailed .content p span:nth-child(4) { color: #54a0ff; }
-  .detailed .content p span:nth-child(5) { color: #5f27cd; }
+  .detailed p:nth-child(1) { color: #00b7ff; }
+  .detailed p:nth-child(2) { color: #ff5e00; }
+  .detailed p:nth-child(3) { color: #47ff47; }
 
-  /* Content Area */
   .content {
-    padding: 30px;
-    max-width: 700px;
-    margin: auto;
-    border-radius: 10px;
-    transition: all 0.4s ease;
+    padding: 20px;
+    width: 100%;
+    transition: all 0.3s ease;
     text-align: center;
   }
 
-  /* Device Simulation Box */
-  .device-view {
-    border: 2px solid #666;
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 15px;
-    margin-left: auto;
-    margin-right: auto;
-    transition: all 0.4s ease;
-    background-color: rgba(255,255,255,0.1);
-    color: inherit;
-  }
-
-  /* Performance Effects */
-  .low-performance {
-    filter: blur(2px) brightness(0.8);
-    transition: all 1s ease;
-  }
-  .medium-performance {
-    filter: blur(0.5px) brightness(1);
-    transition: all 0.4s ease;
-  }
-  .high-performance {
-    filter: none;
-    transition: all 0.1s ease;
-  }
+  /* Device sizes */
+  .desktop { width: 800px; height: 500px; }
+  .tablet { width: 600px; height: 400px; }
+  .mobile { width: 350px; height: 600px; }
 </style>
 </head>
-<body class="light simple">
+<body>
 
   <div class="filter-bar">
-    <!-- Language / Region -->
+    <!-- Language -->
     <select id="language" onchange="changeLanguage()">
-      <option value="auto">Auto (Detect Region)</option>
       <option value="en">English</option>
       <option value="es">Spanish</option>
       <option value="hi">Hindi</option>
       <option value="fr">French</option>
-      <option value="zh">Chinese</option>
+      <option value="jp">Japanese</option>
     </select>
 
     <!-- Font Size -->
     <button onclick="adjustFontSize(-2)">A–</button>
     <button onclick="adjustFontSize(2)">A+</button>
 
-    <!-- Color Theme -->
+    <!-- Theme -->
     <select id="theme" onchange="changeTheme(this.value)">
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-      <option value="contrast">High Contrast</option>
+      <option value="light">Light Mode</option>
+      <option value="dark">Dark Mode</option>
     </select>
 
     <!-- Layout -->
@@ -138,131 +113,102 @@
 
     <!-- Performance -->
     <input type="range" id="fps" min="1" max="3" value="2" onchange="changePerformance(this.value)">
-    <label for="fps" style="color:white;">Performance / Quality</label>
+    <label for="fps" style="color:white;">Performance</label>
   </div>
 
-  <div class="content" id="content">
-    <h1 id="heading">Welcome to Unreal Engine Accessibility Demo</h1>
-    <p id="paragraph">
-      <span>This prototype allows users to customize Unreal Engine’s web experience.</span><br>
-      <span>Change the theme, language, or layout to your preference.</span><br>
-      <span>Switch between simple and detailed UI modes.</span><br>
-      <span>Adjust performance for smoother operation on any device.</span><br>
-      <span>Accessibility is for everyone, everywhere.</span>
-    </p>
-
-    <div class="device-view" id="device-view">Desktop View Simulation</div>
+  <div id="simulation" class="simulation light simple desktop">
+    <div class="content" id="content">
+      <h1 id="heading">Welcome to Unreal Engine Accessibility Demo</h1>
+      <p id="p1">This is a customizable prototype showing how users can personalize Unreal Engine’s interface.</p>
+      <p id="p2">You can change the theme, layout, and font to your liking.</p>
+      <p id="p3">Resize the simulated device view using the dropdown above.</p>
+    </div>
   </div>
 
 <script>
-  // Font size adjustment
+  let currentFontSize = 16;
+  let animationSpeed = 0.3;
+
   function adjustFontSize(change) {
-    const content = document.querySelector('.content');
-    let current = parseFloat(window.getComputedStyle(content).fontSize);
-    content.style.fontSize = (current + change) + 'px';
+    currentFontSize += change;
+    document.querySelectorAll('.content p, .content h1').forEach(el => {
+      el.style.fontSize = currentFontSize + 'px';
+    });
   }
 
-  // Theme change
   function changeTheme(theme) {
+    const sim = document.getElementById('simulation');
     const layout = getLayout();
-    document.body.className = theme + ' ' + layout;
+    sim.className = `simulation ${theme} ${layout} ${getDevice()}`;
   }
 
-  // Layout change
   function changeLayout(layout) {
-    const theme = getTheme();
-    document.body.className = theme + ' ' + layout;
+    const sim = document.getElementById('simulation');
+    sim.className = `simulation ${getTheme()} ${layout} ${getDevice()}`;
   }
 
-  // Device simulation (now changes size)
   function changeDeviceView(device) {
-    const box = document.getElementById('device-view');
-    if (device === 'mobile') {
-      box.textContent = 'Mobile View Simulation';
-      box.style.width = '250px';
-      box.style.height = '400px';
-    } else if (device === 'tablet') {
-      box.textContent = 'Tablet View Simulation';
-      box.style.width = '500px';
-      box.style.height = '600px';
-    } else {
-      box.textContent = 'Desktop View Simulation';
-      box.style.width = '700px';
-      box.style.height = '400px';
-    }
+    const sim = document.getElementById('simulation');
+    sim.className = `simulation ${getTheme()} ${getLayout()} ${device}`;
   }
 
-  // Performance change (actually affects visuals)
   function changePerformance(value) {
-    const content = document.getElementById('content');
-    if (value == 1) {
-      content.classList.remove('medium-performance', 'high-performance');
-      content.classList.add('low-performance');
-    } else if (value == 2) {
-      content.classList.remove('low-performance', 'high-performance');
-      content.classList.add('medium-performance');
-    } else {
-      content.classList.remove('low-performance', 'medium-performance');
-      content.classList.add('high-performance');
-    }
+    const sim = document.getElementById('simulation');
+    if (value == 1) animationSpeed = 1;     // low performance (slow)
+    else if (value == 3) animationSpeed = 0.1; // high performance (fast)
+    else animationSpeed = 0.3;
+    sim.style.transition = `all ${animationSpeed}s ease`;
   }
 
-  // Language change simulation
   function changeLanguage() {
     const lang = document.getElementById('language').value;
-    const heading = document.getElementById('heading');
-    const paragraph = document.getElementById('paragraph');
+    const h = document.getElementById('heading');
+    const p1 = document.getElementById('p1');
+    const p2 = document.getElementById('p2');
+    const p3 = document.getElementById('p3');
 
-    if (lang === 'es') {
-      heading.textContent = "Bienvenido a la demostración de accesibilidad de Unreal Engine";
-      paragraph.innerHTML = `
-        <span>Este prototipo permite a los usuarios personalizar la experiencia web de Unreal Engine.</span><br>
-        <span>Cambia el tema, idioma o diseño según tu preferencia.</span><br>
-        <span>Alterna entre modos de interfaz simple y detallado.</span><br>
-        <span>Ajusta el rendimiento para un funcionamiento más fluido.</span><br>
-        <span>La accesibilidad es para todos, en todas partes.</span>`;
-    } else if (lang === 'hi') {
-      heading.textContent = "Unreal Engine एक्सेसिबिलिटी डेमो में आपका स्वागत है";
-      paragraph.innerHTML = `
-        <span>यह प्रोटोटाइप उपयोगकर्ताओं को Unreal Engine का वेब अनुभव बदलने की अनुमति देता है।</span><br>
-        <span>थीम, भाषा या लेआउट अपनी पसंद के अनुसार बदलें।</span><br>
-        <span>सरल और विस्तृत यूआई मोड के बीच स्विच करें।</span><br>
-        <span>बेहतर प्रदर्शन के लिए गुणवत्ता समायोजित करें।</span><br>
-        <span>सुलभता सभी के लिए है।</span>`;
-    } else if (lang === 'fr') {
-      heading.textContent = "Bienvenue dans la démo d'accessibilité Unreal Engine";
-      paragraph.innerHTML = `
-        <span>Ce prototype permet aux utilisateurs de personnaliser leur expérience web Unreal Engine.</span><br>
-        <span>Modifiez le thème, la langue ou la mise en page selon vos préférences.</span><br>
-        <span>Passez entre les modes d’interface simple et détaillé.</span><br>
-        <span>Ajustez la performance pour un fonctionnement plus fluide.</span><br>
-        <span>L'accessibilité est pour tout le monde.</span>`;
-    } else if (lang === 'zh') {
-      heading.textContent = "欢迎使用虚幻引擎无障碍演示";
-      paragraph.innerHTML = `
-        <span>此原型允许用户自定义虚幻引擎的网页体验。</span><br>
-        <span>根据您的喜好更改主题、语言或布局。</span><br>
-        <span>在简单和详细界面模式之间切换。</span><br>
-        <span>调整性能以获得更流畅的体验。</span><br>
-        <span>无障碍访问属于每个人。</span>`;
-    } else {
-      heading.textContent = "Welcome to Unreal Engine Accessibility Demo";
-      paragraph.innerHTML = `
-        <span>This prototype allows users to customize Unreal Engine’s web experience.</span><br>
-        <span>Change the theme, language, or layout to your preference.</span><br>
-        <span>Switch between simple and detailed UI modes.</span><br>
-        <span>Adjust performance for smoother operation on any device.</span><br>
-        <span>Accessibility is for everyone, everywhere.</span>`;
-    }
+    const translations = {
+      en: ["Welcome to Unreal Engine Accessibility Demo",
+           "This is a customizable prototype showing how users can personalize Unreal Engine’s interface.",
+           "You can change the theme, layout, and font to your liking.",
+           "Resize the simulated device view using the dropdown above."],
+      es: ["Bienvenido a la demostración de accesibilidad de Unreal Engine",
+           "Este prototipo muestra cómo los usuarios pueden personalizar la interfaz de Unreal Engine.",
+           "Puedes cambiar el tema, diseño y tamaño de fuente a tu gusto.",
+           "Ajusta la vista del dispositivo con el menú desplegable."],
+      hi: ["Unreal Engine एक्सेसिबिलिटी डेमो में आपका स्वागत है",
+           "यह प्रोटोटाइप दिखाता है कि उपयोगकर्ता Unreal Engine के इंटरफेस को अपनी पसंद के अनुसार बदल सकते हैं।",
+           "आप थीम, लेआउट और फ़ॉन्ट को अपनी पसंद से बदल सकते हैं।",
+           "ऊपर दिए गए ड्रॉपडाउन से डिवाइस दृश्य को समायोजित करें।"],
+      fr: ["Bienvenue dans la démo d'accessibilité d'Unreal Engine",
+           "Ce prototype montre comment les utilisateurs peuvent personnaliser l'interface d'Unreal Engine.",
+           "Vous pouvez modifier le thème, la disposition et la police selon vos préférences.",
+           "Ajustez la vue du périphérique à l'aide du menu ci-dessus."],
+      jp: ["Unreal Engine アクセシビリティデモへようこそ",
+           "このプロトタイプでは、ユーザーが Unreal Engine のインターフェースをカスタマイズできる方法を示しています。",
+           "テーマ、レイアウト、フォントを自由に変更できます。",
+           "上のドロップダウンを使ってデバイスビューを変更してください。"]
+    };
+
+    const t = translations[lang] || translations.en;
+    [h.textContent, p1.textContent, p2.textContent, p3.textContent] = t;
   }
 
   function getTheme() {
-    return document.body.classList.contains('dark') ? 'dark' :
-           document.body.classList.contains('contrast') ? 'contrast' : 'light';
+    const sim = document.getElementById('simulation');
+    return sim.classList.contains('dark') ? 'dark' : 'light';
   }
 
   function getLayout() {
-    return document.body.classList.contains('detailed') ? 'detailed' : 'simple';
+    const sim = document.getElementById('simulation');
+    return sim.classList.contains('detailed') ? 'detailed' : 'simple';
+  }
+
+  function getDevice() {
+    const sim = document.getElementById('simulation');
+    if (sim.classList.contains('mobile')) return 'mobile';
+    if (sim.classList.contains('tablet')) return 'tablet';
+    return 'desktop';
   }
 </script>
 
