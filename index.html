@@ -42,16 +42,16 @@
   /* Themes */
   .light { background-color: #f5f5f5; color: #222; }
   .dark { background-color: #181818; color: #f5f5f5; }
-  .contrast { background-color: black; color: yellow; }
+  .contrast { background-color: #000; color: #00ff00; }
 
   /* Layouts */
   .simple .content {
-    background-color: #ffffff;
-    color: #222;
+    background: none;
+    color: inherit;
   }
 
   .detailed .content {
-    background-color: #000;
+    background: #000;
     color: #f5f5f5;
   }
 
@@ -61,20 +61,41 @@
   .detailed .content p span:nth-child(4) { color: #54a0ff; }
   .detailed .content p span:nth-child(5) { color: #5f27cd; }
 
-  /* Content */
+  /* Content Area */
   .content {
     padding: 30px;
     max-width: 700px;
     margin: auto;
     border-radius: 10px;
-    transition: background 0.3s ease;
+    transition: all 0.4s ease;
+    text-align: center;
   }
 
+  /* Device Simulation Box */
   .device-view {
-    border: 2px dashed gray;
+    border: 2px solid #666;
     border-radius: 10px;
     padding: 15px;
     margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.4s ease;
+    background-color: rgba(255,255,255,0.1);
+    color: inherit;
+  }
+
+  /* Performance Effects */
+  .low-performance {
+    filter: blur(2px) brightness(0.8);
+    transition: all 1s ease;
+  }
+  .medium-performance {
+    filter: blur(0.5px) brightness(1);
+    transition: all 0.4s ease;
+  }
+  .high-performance {
+    filter: none;
+    transition: all 0.1s ease;
   }
 </style>
 </head>
@@ -120,7 +141,7 @@
     <label for="fps" style="color:white;">Performance / Quality</label>
   </div>
 
-  <div class="content">
+  <div class="content" id="content">
     <h1 id="heading">Welcome to Unreal Engine Accessibility Demo</h1>
     <p id="paragraph">
       <span>This prototype allows users to customize Unreal Engine’s web experience.</span><br>
@@ -143,7 +164,8 @@
 
   // Theme change
   function changeTheme(theme) {
-    document.body.className = theme + ' ' + getLayout();
+    const layout = getLayout();
+    document.body.className = theme + ' ' + layout;
   }
 
   // Layout change
@@ -152,20 +174,37 @@
     document.body.className = theme + ' ' + layout;
   }
 
-  // Device simulation
+  // Device simulation (now changes size)
   function changeDeviceView(device) {
-    const deviceBox = document.getElementById('device-view');
-    if (device === 'mobile') deviceBox.textContent = 'Mobile View Simulation';
-    else if (device === 'tablet') deviceBox.textContent = 'Tablet View Simulation';
-    else deviceBox.textContent = 'Desktop View Simulation';
+    const box = document.getElementById('device-view');
+    if (device === 'mobile') {
+      box.textContent = 'Mobile View Simulation';
+      box.style.width = '250px';
+      box.style.height = '400px';
+    } else if (device === 'tablet') {
+      box.textContent = 'Tablet View Simulation';
+      box.style.width = '500px';
+      box.style.height = '600px';
+    } else {
+      box.textContent = 'Desktop View Simulation';
+      box.style.width = '700px';
+      box.style.height = '400px';
+    }
   }
 
-  // Performance change (simulate FPS effect)
+  // Performance change (actually affects visuals)
   function changePerformance(value) {
-    const body = document.body;
-    if (value == 1) body.style.transition = "all 0.8s ease";  // lower quality (slower)
-    else if (value == 3) body.style.transition = "all 0.1s ease"; // high performance
-    else body.style.transition = "all 0.3s ease";
+    const content = document.getElementById('content');
+    if (value == 1) {
+      content.classList.remove('medium-performance', 'high-performance');
+      content.classList.add('low-performance');
+    } else if (value == 2) {
+      content.classList.remove('low-performance', 'high-performance');
+      content.classList.add('medium-performance');
+    } else {
+      content.classList.remove('low-performance', 'medium-performance');
+      content.classList.add('high-performance');
+    }
   }
 
   // Language change simulation
