@@ -154,9 +154,21 @@
 
   function changePerformance(value) {
     const sim = document.getElementById('simulation');
-    if (value == 1) animationSpeed = 1;     // low performance (slow)
-    else if (value == 3) animationSpeed = 0.1; // high performance (fast)
-    else animationSpeed = 0.3;
+    const content = document.getElementById('content');
+
+    if (value == 1) {
+      animationSpeed = 1;        // slow transitions
+      content.style.filter = "blur(3px)"; // very blurry
+    } 
+    else if (value == 2) {
+      animationSpeed = 0.3;      // medium speed
+      content.style.filter = "blur(1px)"; // slight blur
+    } 
+    else if (value == 3) {
+      animationSpeed = 0.1;      // fast transitions
+      content.style.filter = "blur(0px)"; // crystal clear
+    }
+
     sim.style.transition = `all ${animationSpeed}s ease`;
   }
 
